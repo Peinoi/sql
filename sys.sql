@@ -8,3 +8,13 @@ TEMPORARY TABLESPACE temp;
 GRANT CONNECT, RESOURCE, UNLIMITED TABLESPACE
 TO scott;
 
+
+SELECT * FROM tab;
+SELECT * FROM dba_users
+order by username;
+
+
+select * from dba_users
+where username = 'SCOTT';
+
+ALTER USER SCOTT ACCOUNT UNLOCK;
