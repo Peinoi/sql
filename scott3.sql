@@ -313,6 +313,7 @@ CREATE TABLE board_t(
     ,write_date date default sysdate
     ,likes number(3) default 0
 );
+drop table board_t cascade constraint purge;
 select * from board_t;
 insert into board_t(board_no,title,content,writer) values(1,'게시판 글 연습','게시판이 잘 되는지 연습','홍길동');
 insert into board_t(board_no,title,content,writer) values(2,'글연습','게시판이 글이 안써짐','잘써짐');
@@ -347,6 +348,39 @@ alter table board_t modify(board_no number(10));
 
 select max(board_no) from board_t;
 
+-- 자동 번호 갱신
 insert into board_t(board_no, title, content ,writer)
 select board_t_seq.nextval, title,content,writer
 from board_t;
+--where rownum =1;한줄만 출력
+--조회
+select * 
+from board_t 
+order by board_no;
+
+--<------------------------------페이징 기법------------------------------->
+--1page 1~10, 2page 11~20,
+--왠만해서는 쿼리 안에 order by를 쓰지 않는게 좋다 시간이 걸린다 
+--굳이 써야한다면 인덱스나 다른 방법으로 정렬해라
+SELECT b.*
+From
+(select  /*+ INDEX(a board_t) */ rownum rn, a.*
+from 
+board_t a) b
+where b.rn > (:page -1) * 10
+and b.rn <= (:page *10)
+;
+
+alter table board_t
+rename constraint SYS_C008682 to board_pk;
+
+SELECT /*+ INDEX_DESC(b BOARD_PK) */ b.*
+FROM board_t b;
+
+
+commit;
+delete from board_t where board_no = 6;
+
+create index board_write_date_idx
+on board_t(write_date);
+
