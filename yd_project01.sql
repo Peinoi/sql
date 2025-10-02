@@ -6,10 +6,10 @@ SELECT * FROM yddepartment;
 DROP TABLE yddepartment purge;
 -- 발신자 메일 테이블 전체 조회
 SELECT * FROM ydmessage;
-DROP TABLE ydmail purge;
+DROP TABLE ydmessage purge;
 -- 수신자 메일 테이블 전체 조회
 SELECT * FROM YDmessage_RECIPIENT;
-DROP TABLE YDMAIL_RECIPIENT purge;
+DROP TABLE YDmessage_RECIPIENT purge;
 -- 전체 게시판 테이블 전체 조회
 SELECT * FROM YDMAINBOARD;
 DROP TABLE YDMAINBOARD purge;
@@ -45,7 +45,7 @@ INSERT INTO ydDepartment (deptno, dept_name) VALUES (3, '영업부');
 
 
 
-
+commit;
 
 
 
@@ -111,24 +111,24 @@ CREATE TABLE ydmainBoard (
 
 -- 메일 테이블
 CREATE TABLE ydmessage (
-    mail_id NUMBER(10) CONSTRAINT pk_mail PRIMARY KEY, -- 메일 아이디
-    sender_user_id VARCHAR2(30) CONSTRAINT nn_mail_sender NOT NULL, -- 보낸 사람 아이디
-    title VARCHAR2(200) CONSTRAINT nn_mail_title NOT NULL, -- 메일 제목
-    content VARCHAR2(2000) CONSTRAINT nn_mail_content NOT NULL, -- 메일 내용
+    msg_id NUMBER(10) CONSTRAINT pk_msg PRIMARY KEY, -- 메일 아이디
+    sender_user_id VARCHAR2(30) CONSTRAINT nn_msg_sender NOT NULL, -- 보낸 사람 아이디
+    title VARCHAR2(200) CONSTRAINT nn_msg_title NOT NULL, -- 메일 제목
+    content VARCHAR2(2000) CONSTRAINT nn_msg_content NOT NULL, -- 메일 내용
     send_date DATE DEFAULT SYSDATE -- 보낸 날짜
 );
 
 -- 메일 수신자 테이블
 CREATE TABLE ydmessage_Recipient (
-    recipient_id NUMBER(10) CONSTRAINT pk_mail_recipient PRIMARY KEY, -- 수신자 번호
-    mail_id NUMBER(10) CONSTRAINT nn_mail_recipient_mailid NOT NULL, -- 메일 아이디
-    emp_no NUMBER(10) CONSTRAINT nn_mail_recipient_empno NOT NULL, -- 수신자 사원 번호
-    is_read CHAR(1) DEFAULT 'N' CONSTRAINT ck_mail_isread CHECK (is_read IN ('Y','N')), -- 읽음 여부
+    recipient_id NUMBER(10) CONSTRAINT pk_masg_recipient PRIMARY KEY, -- 수신자 번호
+    msg_id NUMBER(10) CONSTRAINT nn_msg_recipient_msgid NOT NULL, -- 메일 아이디
+    emp_no NUMBER(10) CONSTRAINT nn_msg_recipient_empno NOT NULL, -- 수신자 사원 번호
+    is_read CHAR(1) DEFAULT 'N' CONSTRAINT ck_msg_isread CHECK (is_read IN ('Y','N')), -- 읽음 여부
     read_date DATE, -- 읽은 날짜
-    is_deleted_by_recipient CHAR(1) DEFAULT 'N' CONSTRAINT ck_mail_deleted CHECK (is_deleted_by_recipient IN ('Y','N')), -- 삭제 여부
-    CONSTRAINT fk_msgrecipient_msg FOREIGN KEY (mail_id)
-        REFERENCES ydmessage (mail_id),
-    CONSTRAINT fk_mailrecipient_employee FOREIGN KEY (emp_no)
+    is_deleted_by_recipient CHAR(1) DEFAULT 'N' CONSTRAINT ck_msg_deleted CHECK (is_deleted_by_recipient IN ('Y','N')), -- 삭제 여부
+    CONSTRAINT fk_msgrecipient_msg FOREIGN KEY (msg_id)
+        REFERENCES ydmessage (msg_id),
+    CONSTRAINT fk_msgrecipient_employee FOREIGN KEY (emp_no)
         REFERENCES ydEmployee (emp_no),
-    CONSTRAINT uq_msg_recipient UNIQUE (mail_id, emp_no)  -- 중복 방지 유니크 제약 추가
+    CONSTRAINT uq_msg_recipient UNIQUE (msg_id, emp_no)  -- 중복 방지 유니크 제약 추가
 );
