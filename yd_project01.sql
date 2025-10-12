@@ -16,7 +16,9 @@ DROP TABLE YDMAINBOARD purge;
 -- 개인 게시판 테이블 전체 조회
 SELECT * FROM YDMYBOARD;
 DROP TABLE YDMYBOARD purge;
-
+-- 개인 프로필
+SELECT * FROM YDPROFILE;
+DROP TABLE YDPROFILE PURGE;
 
 --샘플 데이터
 INSERT INTO ydEmployee (emp_no, emp_id, emp_pw, emp_name, deptno, hiredate) VALUES (1, 'user01', 'pw01', '홍길동', 10, TO_DATE('2023-01-10','YYYY-MM-DD'));
@@ -168,4 +170,14 @@ CREATE TABLE ydmessage_Recipient (
     CONSTRAINT fk_msgrecipient_employee FOREIGN KEY (emp_no)
         REFERENCES ydEmployee (emp_no),
     CONSTRAINT uq_msg_recipient UNIQUE (msg_id, emp_no)  -- 중복 방지 유니크 제약 추가
+);
+
+
+
+CREATE TABLE YDPROFILE (
+  EMP_NO NUMBER PRIMARY KEY,
+  IMG_PATH VARCHAR2(200),
+  CONSTRAINT fk_profile_employee FOREIGN KEY (EMP_NO)
+      REFERENCES YDEMPLOYEE (EMP_NO)
+      ON DELETE CASCADE
 );
