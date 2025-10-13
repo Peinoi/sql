@@ -73,3 +73,5 @@ INSERT INTO ydmessage_Recipient(recipient_id, msg_id, emp_no, is_read, read_date
 VALUES(6, 3, 7, 'N', NULL, 'Y'); -- 한지민(7)은 안 읽고 삭제함
 INSERT INTO ydmessage_Recipient(recipient_id, msg_id, emp_no, is_read, read_date, is_deleted_by_recipient)
 VALUES(7, 3, 10, 'Y', SYSDATE - 0.2, 'N'); -- 강호(10)가 읽음
+
+commit;
